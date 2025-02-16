@@ -15,10 +15,11 @@ export const useLogin = ()=>{
     const onSubmit = async (data:LoginSchemaType)=>{
         try{
             const result = await loginUser(data)
+            localStorage.setItem('user',JSON.stringify(result?.userData))
             toast.success(result?.message)
             console.log(data)
             setTimeout(()=>{
-                Router.push('/auth/profile')
+                Router.push('/dashboard')
             },500)
         }catch(error:any){
             console.log(error)

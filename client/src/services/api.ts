@@ -1,6 +1,7 @@
 import axios from "axios";
 import { SERVER_URL } from "@/config/constants";
 import { LoginSchemaType, SignupSchemaType } from "@/lib/validators/authSchema";
+import { IUser } from "@/types/user";
 
 export const axiosInstance = axios.create({
     baseURL :SERVER_URL,
@@ -13,7 +14,7 @@ export const axiosInstance = axios.create({
 export const handleAxiosError = (error: any) => {
     
     console.log(error)
-    const errorMessage = error?.response?.data?.message || error?.response?.data?.message || "Unexpected error occurred.";
+    const errorMessage = error?.response?.data?.message || "Unexpected error occurred.";
 
     console.log(errorMessage)
 
@@ -39,6 +40,8 @@ export const signUpUser = async(data:SignupSchemaType)=>{
     }
 }           
 
+
+//  * admin user crud
 export const fetchUsers = async (page: number, limit: number, search?: string) => {
     try {
       const response = await axiosInstance.get('/api/admin/users',{
@@ -53,3 +56,31 @@ export const fetchUsers = async (page: number, limit: number, search?: string) =
         throw handleAxiosError(error);
     }
   };
+
+  export const deleteUser = async(userID:string)=>{
+    try{
+        const response = await axiosInstance.delete(`/api/admin/users/${userID}`)
+        return response?.data
+    }catch(error){
+        throw handleAxiosError(error);
+    }
+  }
+
+  export const updateUser = async(data:IUser)=>{
+    try {
+        const response = await axiosInstance.put(`/api/admin/users`,data)
+        return response.data
+    } catch (error) {
+        throw handleAxiosError(error);
+    }
+  }
+
+
+export const getRecord = async(userId:string)=>{
+    try{
+        const response = await axiosInstance.put(`/api/admin/record/${userId}`)
+        return response.data
+    }catch(error){
+        throw handleAxiosError(error);
+    }
+}

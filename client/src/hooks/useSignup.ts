@@ -18,9 +18,12 @@ export const useSignup = ()=>{
             
             showUserIdToast(result.userId)
 
-        }catch(error:any){
-    1        toast.error(error.message)
-            console.log(error?.message)
+        }catch(error: unknown){
+            if(error instanceof Error){
+                toast.error(error.message) 
+            }else{
+                toast.error('Unexpected Error')
+            }
         }
     }
     return {register,handleSubmit,errors,onSubmit,Toaster}

@@ -14,16 +14,33 @@ export const loginSchema = z.object({
     password : passwordSchema,
 })
 
+export const userNameSchema = z.string().trim().min(3,"User Name must be at least 3 characters")
+
+export const emailIDSchema = z.string().trim().email("Invalid email format")
+
 
 export type LoginSchemaType = z.infer<typeof loginSchema>;
 
 
 export const signupSchema = z.object({
-    userName : z.string().trim().min(3,"User Name must be at least 3 characters"),
-    emailID : z.string().trim().email("Invalid email format"),
+    userName : userNameSchema,
+    emailID : emailIDSchema,
     password : passwordSchema,
     role : z.boolean().optional().default(false)
 })
 
 
 export type SignupSchemaType =  z.infer<typeof signupSchema>
+
+export const userEditeSchema = z.object({
+    userName : userNameSchema,
+    emailID : emailIDSchema,
+})
+
+
+export type UserEditeSchema = z.infer<typeof userEditeSchema>
+
+
+export const emailValidator = (emailID:string)=> (/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test(emailID)
+
+export const userNameValidator = (name:string)=>(name).trim().length>2
