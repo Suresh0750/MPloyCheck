@@ -12,4 +12,4 @@ const adminController= new AdminController(adminsUsecases)
 
 
 
-export {adminController}
+export {adminController}    

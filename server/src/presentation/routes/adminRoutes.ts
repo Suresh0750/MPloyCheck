@@ -4,6 +4,6 @@ import { adminController } from '../DIP/adminDIP'
 
 const adminRouter = express.Router()
 
-adminRouter.get('/users', adminController.execute.bind(adminController));
-
+adminRouter.delete('/users/:id',adminController.deleteUser.bind(adminController))
+adminRouter.route('/users').get(adminController.execute.bind(adminController)).put(adminController.updateUser.bind(adminController))
 export default adminRouter;

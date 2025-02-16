@@ -9,7 +9,7 @@ export default class RecordsUsecase{
     async create(entity:IRecords):Promise<IRecords>{
       return  await this.userRecords.create(entity)
     }
-    async getFetchRecord(userId:string):Promise<IRecords[] | null>{
+    async fetchRecord(userId:string):Promise<IRecords[] | null>{
         return await this.userRecords.findByUserId(userId)
     }
     async updateRecord(entity:IRecords) {

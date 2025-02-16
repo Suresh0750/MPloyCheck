@@ -5,6 +5,7 @@ import User,{UserDocuments} from "../models/user";
 import { Model } from "mongoose";
 import { AppError } from "@/presentation/middlewares/ErrorHandler";
 import { HttpStatus } from "@/shared/HttpStatusCode";
+import { ConflictError } from '@/domain/entities/CustomErrors';
 
 
 export default class UserRepository implements IUserRepository{
@@ -39,6 +40,23 @@ export default class UserRepository implements IUserRepository{
               },
             },
           ]);
+    }
+    async delete(_id: string): Promise<void> {
+        await this.UserModel.deleteOne({_id})
+    }
+    async update(entity: IUser): Promise<void> {
+       try {
+        await this.UserModel.updateOne(
+            { userID: entity.userID },
+            { $set: { userName: entity.userName, emailID: entity.emailID } }
+          );     
+       } catch (error: any) {
+            if (error.code === 11000) {
+                throw new ConflictError("Duplicate email error: This email is already in use.");
+            }
+            
+            throw new Error("Failed to update user.");
+        }
     }
 }
 

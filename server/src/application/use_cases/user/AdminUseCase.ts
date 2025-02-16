@@ -1,4 +1,5 @@
 
+import { IUser } from "@/domain/entities/IUser";
 import { IUserRepository } from "@/domain/interface/repositories/IUserRepository";
 
 
@@ -17,13 +18,11 @@ export default class AdminsUsecase{
       
         return await this.userRepository.find(query,skip,data.limit)
     }
+    async deleteUser(_id:string){
+        await this.userRepository.delete(_id)
+    }
+    async update(entity:IUser){
+        console.log(entity)
+        await this.userRepository.update(entity)
+    }
 }
-
-
-/*
-
-    skip 
-    limit
-    search
-
-*/
