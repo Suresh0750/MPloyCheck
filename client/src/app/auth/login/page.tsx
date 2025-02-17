@@ -3,9 +3,10 @@ import Link from "next/link";
 import { useLogin } from "@/hooks/useLogin";
 
 
+
 export default function Login() {
 
-    const {onSubmit,handleSubmit,errors,register} = useLogin()
+    const {onSubmit,handleSubmit,errors,register,Toaster} = useLogin()
 
     return (
       
@@ -52,8 +53,10 @@ export default function Login() {
               <span className="text-indigo-500 hover:underline">
                 Sign up
               </span>
+              
             </Link>
           </p>
+          <Toaster position="top-center"/>
         </form> 
     );
   }

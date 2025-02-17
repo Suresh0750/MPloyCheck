@@ -1,15 +1,19 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import { IRecord } from "@/types/record";
 
-const initialState: { datas: IRecord[][]; totalCount: number } = {
+const initialState: { datas: IRecord[][]; totalCount: number ,currentRecordUserId:string | null} = {
   datas: [],
   totalCount: 0,
+  currentRecordUserId : null
 };
 
 const recordSlice = createSlice({
-  name: "user",
+  name: "record",
   initialState,
   reducers: {
+    currentRecordUserId: (state,action)=>{        // * used for if the user login show record || if the admin can see user record 
+      state.currentRecordUserId = action.payload
+    },
     addRecord: (state, action: PayloadAction<IRecord[]>) => {
       state.datas.push(action.payload);
     },
@@ -29,5 +33,5 @@ const recordSlice = createSlice({
   },
 });
 
-export const { addRecord, addCount, deleteRecord,resetRecords } = recordSlice.actions;
+export const { addRecord, addCount, deleteRecord,resetRecords,currentRecordUserId } = recordSlice.actions;
 export default recordSlice.reducer;

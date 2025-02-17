@@ -16,7 +16,7 @@ export const handleAxiosError = (error: any) => {
     console.log(error)
     const errorMessage = error?.response?.data?.message || "Unexpected error occurred.";
 
-    console.log(errorMessage)
+    console.log(errorMessage)   
 
     return new Error(errorMessage);
 };
@@ -26,7 +26,7 @@ export const loginUser = async(data:LoginSchemaType)=>{
     try {
         const response = await axiosInstance.post('/api/user/login',data)
         return response.data 
-    } catch (error) {
+    } catch (error:unknown) {
         throw handleAxiosError(error)
     }
 }    
@@ -35,7 +35,7 @@ export const signUpUser = async(data:SignupSchemaType)=>{
     try {
         const response = await axiosInstance.post('/api/user/signup',data)
         return response.data 
-    } catch (error) {
+    } catch (error:unknown) {
         throw handleAxiosError(error)
     }
 }           
@@ -52,7 +52,7 @@ export const fetchUsers = async (page: number, limit: number, search?: string) =
             },
       })
       return response?.data?.result || []
-    } catch (error) {
+    } catch (error:unknown) {
         throw handleAxiosError(error);
     }
   };
@@ -61,7 +61,7 @@ export const fetchUsers = async (page: number, limit: number, search?: string) =
     try{
         const response = await axiosInstance.delete(`/api/admin/users/${userID}`)
         return response?.data
-    }catch(error){
+    }catch(error:unknown){
         throw handleAxiosError(error);
     }
   }
@@ -70,15 +70,15 @@ export const fetchUsers = async (page: number, limit: number, search?: string) =
     try {
         const response = await axiosInstance.put(`/api/admin/users`,data)
         return response.data
-    } catch (error) {
+    } catch (error:unknown) {
         throw handleAxiosError(error);
     }
   }
 
 
-export const getRecord = async(page:number,limit:number,search:string,userId:string)=>{
+export const fetchRecord = async(page:number,limit:number,search:string,userId:string)=>{
     try{
-        const response = await axiosInstance.put(`/api/record/${userId}`,{
+        const response = await axiosInstance.get(`/api/record/${userId}`,{
             params: {
                 page, 
                 limit, 
@@ -86,7 +86,7 @@ export const getRecord = async(page:number,limit:number,search:string,userId:str
               },
         })
         return response.data
-    }catch(error){
+    }catch(error:unknown){
         throw handleAxiosError(error);
     }
 }

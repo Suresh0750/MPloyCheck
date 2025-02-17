@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import SearchBar from "@/components/SearchBar";
 import AddUser from "@/components/AddUser";
 import { useUser } from "@/hooks/useUser";
-
+import { FaBackward } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { currentRecordUserId } from "@/redux/slices/recordSlice";
 
 export default function Layout({
   children,
@@ -15,44 +18,53 @@ export default function Layout({
   user: React.ReactNode;
   record: React.ReactNode;
 }) {
-  const [isActive, setIsActive] = useState<"user" | "record">("user");
+  const [isUserId, setIsUserId] = useState<string | null>(null);  // * used for admin select user & if the user login means he can't see the all users
   const [role,setRole] = useState<string>('')
   const [addData,setAddData] = useState<boolean>(false)
   const {getUser} = useUser()
+  const dispatch = useDispatch()
+  const isSelectUser = useSelector((store:RootState)=>store?.record?.currentRecordUserId)
+
+
   useEffect(()=>{
     const userData = JSON.parse(localStorage.getItem('user') || '')
     if(userData){
       setRole(userData?.role)
+      if(userData.rol=='user'){
+        setIsUserId(userData?._id)
+      }
     }
   },[])
+
+  useEffect(()=>{
+    // * admin select the user
+    setIsUserId(isSelectUser)  
+  },[isSelectUser])
+
   return (
     <>
       {children}
       <div className="p-6">
         <div className="flex justify-between">
           <div className="flex text-xl font-semibold">
-            {
-              role!='user' ? (
                 <div
-                  className={`border-2 border-solid p-2 cursor-pointer ${
-                    isActive === "user" ? "bg-gray-300" : ""
-                  }`}
-                  onClick={() => setIsActive("user")}
+                  className={`border-2 border-gray-400 p-3 rounded-lg bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800 font-semibold shadow-md`}
                 >
-                  User
-                </div> 
-              ) : (
-                <div
-                    className={`border-2 border-solid p-2 px-4 rounded-md cursor-pointer   ${
-                      isActive === "record" ? "bg-gray-300" : ""
-                    }`}
-                    onClick={() => setIsActive("record")}
-                  >
-                    Records
-                  </div>
-              )
-            }
-            
+                  {role === "user" || isUserId ? "Record" : "User"}
+                </div>
+
+                  {
+                    role=='admin'&&isUserId && (
+                      <button 
+                        className="flex items-center gap-2 border ml-2 border-gray-300 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 hover:shadow-lg transition-all duration-300"
+                        onClick={()=>dispatch(currentRecordUserId(null))} // * admin back to the user after see the user record
+                        >
+                        <FaBackward className="text-xl" />
+                        Back
+                      </button>
+
+                    )
+                  }
           </div>
             <div className="flex gap-2">
               <SearchBar />
@@ -64,7 +76,7 @@ export default function Layout({
               </button>
             </div>
         </div>
-        <div className="mt-4">{isActive === "user" ? user : record}</div>
+        <div className="mt-4">{role=='admin'&&!isUserId ? user : record}</div>
       </div>
       {
         addData && <AddUser onClose={()=>setAddData(false)}  getUser={getUser}/>

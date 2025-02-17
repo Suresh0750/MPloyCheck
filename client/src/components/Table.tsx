@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import Pagination from "./Pagination";
-import {toast,Toaster} from "react-hot-toast";
+import {toast} from "react-hot-toast";
 import {deleteUser } from "@/redux/slices/useSlice";
 import EditModal from "./EditModal";
+import { currentRecordUserId } from "@/redux/slices/recordSlice";
+
 
 
 export interface TableProbs{
@@ -18,12 +20,24 @@ export interface TableProbs{
 
 export default function Table({getDatas,datas,totalCount,onDelete,updateUser}:TableProbs){
 
+    const [isAdmin,setIsAdmin] = useState(false)
     const search = useSelector((store:RootState)=>store.search)
+    const role = useSelector((store:RootState)=>store.user?.currentUser?.role)
     const dispatch = useDispatch()
 
     const [page,setPage] = useState(1)
     const [tableData,setTableData] = useState([]) 
     const [editingRecord,setEditingRecord] = useState(null) 
+
+    const handleShowUserRecord = (userID:string)=>{
+      dispatch(currentRecordUserId(userID))
+    }
+    useEffect(()=>{
+      if(role){
+        setIsAdmin(true)
+      }
+    },[])
+
     const LIMIT_PAGE = 10
 
     const handleDelete = (id: string) => {
@@ -99,6 +113,16 @@ export default function Table({getDatas,datas,totalCount,onDelete,updateUser}:Ta
                     >
                         Delete
                     </button>
+                    {
+                      isAdmin && (
+                        <button 
+                          className="bg-green-500 ml-2 hover:bg-green-600 text-white font-bold py-1 px-2 rounded transition duration-300"
+                          onClick={()=>handleShowUserRecord(data?._id)}
+                          >
+                            See Record
+                          </button>
+                      )
+                    }
                     </td>
                 </tr>
                 ))} 
@@ -110,7 +134,7 @@ export default function Table({getDatas,datas,totalCount,onDelete,updateUser}:Ta
             onPageChange={setPage}
             />
              {editingRecord && <EditModal data={editingRecord} onClose={()=>setEditingRecord(null)}  onSave={updateUser}/>}
-             <Toaster position="top-center" />
+             {/* <Toaster position="top-center" /> */}
             </div>
         </>   
     )
