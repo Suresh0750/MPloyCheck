@@ -76,9 +76,15 @@ export const fetchUsers = async (page: number, limit: number, search?: string) =
   }
 
 
-export const getRecord = async(userId:string)=>{
+export const getRecord = async(page:number,limit:number,search:string,userId:string)=>{
     try{
-        const response = await axiosInstance.put(`/api/admin/record/${userId}`)
+        const response = await axiosInstance.put(`/api/record/${userId}`,{
+            params: {
+                page, 
+                limit, 
+                search,
+              },
+        })
         return response.data
     }catch(error){
         throw handleAxiosError(error);

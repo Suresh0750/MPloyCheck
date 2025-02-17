@@ -9,7 +9,7 @@ import EditModal from "./EditModal";
 
 
 export interface TableProbs{
-    getDatas :(page:number,limit:number,search:string)=>void;
+    getDatas :(page:number,limit:number,search:string,userId?:string)=>void;
     datas : any,
     totalCount :number,
     onDelete : (id : string)=>void;

@@ -25,3 +25,6 @@ export interface EditRecord{
 
 
 export type EditData = EditUser | EditRecord
+
+
+
