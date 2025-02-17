@@ -12,8 +12,16 @@ export default class RecordsRepsitory implements IRecordsRepository{
     async create(entity: IRecords): Promise<IRecords> {
         return await this.RecordsModel.create(entity)
     }
-     async findByUserId(userId: string): Promise<IRecords[]> {
-        return await this.RecordsModel.find({ userId });
+     async find(query:any,skip:number,limit:number): Promise<IRecords[]> {
+        return await this.RecordsModel.aggregate([
+            { $match: query }, 
+            {
+              $facet: {
+                totalCount: [{ $count: "count" }],
+                users: [{ $skip: skip }, { $limit: limit }],
+              },
+            },
+          ]);
     }
     async delete(_id: string): Promise<void> {
         await this.RecordsModel.deleteOne({_id})

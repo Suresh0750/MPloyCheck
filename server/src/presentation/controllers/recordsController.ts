@@ -23,11 +23,18 @@ export default class RecordController{
             next(error)
         }
     }
+    // http://localhost:3001/api/record/67b230523751a919226fb85c?page=1&limit=10&search=
+
     async fetchById(req:Request,res:Response,next:NextFunction){
         try {
             if(!req.params.userId) throw new ValidationError('userid is mising')
+            const page = req.query?.page || 1
+            const limit = req.query?.limit || 10
+            const search = req.query?.search || ''
+            const userId = req.params.userId
             
-            const result = await this.recordUsecase.fetchRecord(req.params.userId)
+            // const result = await this.recordUsecase.fetchRecord({page,search,limit,userId})
+            const result :any= []
             res.status(HttpStatus.Created).json({success:true,message:'data successfully fetched',result})
         } catch (error) {
             next(error)
