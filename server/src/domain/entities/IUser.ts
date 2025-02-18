@@ -11,3 +11,13 @@ export interface LoginUsecaseResponse {
     }
   }
   
+
+export type Payload = {
+    userID: string;
+    userName: string;
+    role: string;
+    iat: number;
+    exp: number;
+  };
+  
+  

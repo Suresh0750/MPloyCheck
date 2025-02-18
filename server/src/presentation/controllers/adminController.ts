@@ -1,16 +1,17 @@
 
 
-import {Request,Response, NextFunction } from "express";
+import {Response, NextFunction } from "express";
 import AdminsUsecase from "@/application/use_cases/user/AdminUseCase"; 
 import { HttpStatus } from "@/shared/HttpStatusCode";
 import { ValidationError } from "@/domain/entities/CustomErrors";
+import { CustomRequest } from "@/domain/entities/utils";
 
 
 export default class AdminController{
 
     constructor(private adminUsecase:AdminsUsecase){}
 
-    async execute(req:Request,res:Response,next:NextFunction){
+    async execute(req:CustomRequest,res:Response,next:NextFunction){
         try {
 
             const page = Number(req.query.page) || 1;  
@@ -23,7 +24,7 @@ export default class AdminController{
             next(error)
         }
     }
-    async deleteUser(req:Request,res:Response,next:NextFunction){
+    async deleteUser(req:CustomRequest,res:Response,next:NextFunction){
         try{
             console.log(req.params?.id)
             if(!req.params?.id) throw new ValidationError('ID in missing')
@@ -34,7 +35,7 @@ export default class AdminController{
             next(error)
         }
     }
-    async updateUser(req:Request,res:Response,next:NextFunction){
+    async updateUser(req:CustomRequest,res:Response,next:NextFunction){
         try {
             await this.adminUsecase.update(req.body)
             res.status(HttpStatus.Success).json({success:true,message:'data successfully update'})

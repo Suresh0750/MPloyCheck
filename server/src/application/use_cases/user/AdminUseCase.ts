@@ -7,10 +7,12 @@ import { IUserRepository } from "@/domain/interface/repositories/IUserRepository
 export default class AdminsUsecase{
     constructor(private userRepository:IUserRepository){}
     async fetchUser(data:{page:number,search:string,limit:number}){
+        console.log('data search')
+        console.log(data)
         const query = data.search?.trim()
         ? { $or: [
-            { name: { $regex: data.search.trim(), $options: "i" } },
-            { email: { $regex: data.search.trim(), $options: "i" } }
+            { userName: { $regex: data.search.trim(), $options: "i" } },
+            { emailID: { $regex: data.search.trim(), $options: "i" } }
           ] }
         : {};
       

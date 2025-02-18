@@ -18,7 +18,7 @@ export default class RecordsRepsitory implements IRecordsRepository{
             {
               $facet: {
                 totalCount: [{ $count: "count" }],
-                users: [{ $skip: skip }, { $limit: limit }],
+                records: [{ $skip: skip }, { $limit: limit }],
               },
             },
           ]);

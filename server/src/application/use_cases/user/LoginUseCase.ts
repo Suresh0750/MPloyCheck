@@ -17,8 +17,8 @@ export default class LoginUsecase{
         const isPasswordCheck = await this.bcrptService.comparePass(data.password,isCheckUser.password)
         if(!isPasswordCheck) throw new AppError("Invalid ID or password",HttpStatus.Unauthorized)
         
-        const refreshToken = this.jwtService.generateToken({userID:isCheckUser.userID,role:isCheckUser.role},{expiresIn:'1h'})
-        const accessToken = this.jwtService.generateToken({userID:isCheckUser.userID,role:isCheckUser.role},{expiresIn:'10m'})  
+        const refreshToken = this.jwtService.generateToken({userID:isCheckUser.userID,userName:isCheckUser.userName,role:isCheckUser.role},{expiresIn:'1h'})
+        const accessToken = this.jwtService.generateToken({userID:isCheckUser.userID,userName:isCheckUser.userName,role:isCheckUser.role},{expiresIn:'10m'})  
         return {refreshToken,accessToken,userData:isCheckUser}
     }
 }

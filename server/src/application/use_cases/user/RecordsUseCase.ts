@@ -27,7 +27,7 @@ export default class RecordsUsecase{
           return await this.userRecords.find(query,skip,limit)
         } catch (error) {
           console.error("Error fetching records:", error);
-          return null; // ✅ Handle errors properly
+          return null; 
         }
       }
       

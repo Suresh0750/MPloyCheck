@@ -12,14 +12,15 @@ const recordSchma = new Schema({
     },  
   recordName: {
     type: String,
-    required: true 
+    unique : true,
+    required: true,
     },  
   data: { 
     type: String, 
     required: true 
     },  
   accessLevel: {
-    type: String, 
+    type: String,   
     enum: ["Read", "Write", "Admin"], 
     default: "Read" 
     }

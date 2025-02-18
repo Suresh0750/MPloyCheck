@@ -6,9 +6,11 @@ import { SignupDTO, LoginDTO } from "@/application/dtos/userDTO"
 import { COOKIES } from "@/shared/constants"
 import { LoginUsecaseResponse } from "@/domain/entities/IUser"
 import { NODE_ENV } from "@/config/env"
+import { LogoutUserUseCase } from "@/application/use_cases/user/LogoutUseCase"
+import { CustomRequest } from "@/domain/entities/utils"
 
 export default class UserController{
-    constructor(private signupUseCase:SignupUseCase,private loginUseCase:LoginUsecase){}
+    constructor(private signupUseCase:SignupUseCase,private loginUseCase:LoginUsecase,private logoutUserUseCase:LogoutUserUseCase){}
 
     async signup(req:Request,res:Response,next:NextFunction):Promise<void>{
         try{
@@ -45,4 +47,13 @@ export default class UserController{
             next(error)
         }
     }
+    async logout(req:CustomRequest,res:Response,next:NextFunction):Promise<void>{
+        try {
+            await this.logoutUserUseCase.execute(res)
+            res.status(HttpStatus.Success).json({ message: 'Logged out successfully' });
+          } catch (error) {
+           next(error)
+          }
+    }
+    
 }
