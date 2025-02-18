@@ -7,20 +7,26 @@ import {toast,Toaster} from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { resetRecords } from "@/redux/slices/recordSlice";
 import { resetSearch } from "@/redux/slices/serachSlice";
+import { useState } from "react";
 
 export const useUser = ()=>{
    const dispatch = useDispatch()
    const Router = useRouter()
+   const [isLoading,setIsLoading] = useState<boolean>(false)
 
-         async function getUser(page:number=1,limit:number=10,search:string=''){
+         async function getUser(page:number=1,limit:number=10,search:string='',delay:number=3000){
             try {
-                const result = await fetchUsers(page, limit, search)
+                if(isLoading) return
+                setIsLoading(true)
+                const result = await fetchUsers(page, limit, search,delay)
                 console.log('total users')
                 console.log(result?.[0]?.users)
                 dispatch(addUser(result?.[0]?.users))
                 dispatch(addCount(result?.[0]?.totalCount[0]?.count || 0))
             } catch (error) {
                 console.log(error)
+            } finally{
+                setIsLoading(false)
             }
          }
 
@@ -97,7 +103,7 @@ export const useUser = ()=>{
             }
          }
    
-    return {getUser,onDelete,onUpdate,logout,Toaster}
+    return {getUser,onDelete,onUpdate,logout,Toaster,isLoading}
 }   
 
 

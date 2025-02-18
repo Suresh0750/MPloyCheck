@@ -20,15 +20,15 @@ export const useRecord = () => {
     const dispatch = useDispatch()
     const userID = useSelector((store: RootState) => store?.record?.currentRecordUserId); // * user for identify and fetch perticular user record
 
-
-  console.log('userId',userID)
-
   async function getRecord(page: number = 1, limit: number = 10, search: string = "") {
     try {
       if (!userID) {
         console.warn("User ID is not available yet");
         return;
       }
+      if(isLoading) return
+      setIsLoading(true)
+
       const result = await fetchRecord(page, limit, search, userID);
       dispatch(addRecord(result?.result?.[0]?.records))
       dispatch(addRecord(result?.result?.[0]?.totalCount[0]?.count || 0))
@@ -36,6 +36,9 @@ export const useRecord = () => {
       return result
     } catch (error) {
       console.error("Error fetching records:", error);
+    } finally{
+      setIsLoading(false)
+
     }
   }
 
@@ -81,5 +84,5 @@ export const useRecord = () => {
 
  
 
-  return { getRecord, onDelete, onUpdate ,onSubmit,register,handleSubmit,errors,Toaster};
+  return { getRecord, onDelete, onUpdate ,onSubmit,register,handleSubmit,errors,Toaster,isLoading};
 };

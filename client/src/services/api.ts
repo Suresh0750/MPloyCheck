@@ -43,13 +43,14 @@ export const signUpUser = async(data:SignupSchemaType)=>{
 
 
 //  * admin user crud
-export const fetchUsers = async (page: number, limit: number, search?: string) => {
+export const fetchUsers = async (page: number, limit: number, search?: string,delay?:number) => {
     try {
       const response = await axiosInstance.get('/api/admin/users',{
           params: {
               page, 
               limit, 
               search,
+              delay,
             },
       })
       return response?.data?.result || []

@@ -1,25 +1,34 @@
 "use client"
 import { useEffect, useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
-import store, { RootState } from "@/redux/store";
+import { RootState } from "@/redux/store";
 import Pagination from "./Pagination";
 import {toast} from "react-hot-toast";
 import {deleteUser } from "@/redux/slices/useSlice";
 import EditModal from "./EditModal";
 import { currentRecordUserId } from "@/redux/slices/recordSlice";
 import { IRecord } from "@/types/record";
-
-
+import { Triangle } from "react-loader-spinner";
+// render(<Triangle
+//   visible={true}
+//   height="80"
+//   width="80"
+//   color="#4fa94d"
+//   ariaLabel="triangle-loading"
+//   wrapperStyle={{}}
+//   wrapperClass=""
+//   />)
 
 export interface TableProbs{
-    getDatas :(page:number,limit:number,search:string,userId?:string)=>void;
+    getDatas :(page:number,limit:number,search:string,delay?:number,userId?:string)=>void;
     datas : any,
     totalCount :number,
     onDelete : (id : string)=>void;
     updateUser : (data:any)=>void;
+    isLoading : boolean
 }
 
-export default function Table({getDatas,datas,totalCount,onDelete,updateUser}:TableProbs){
+export default function Table({getDatas,datas,totalCount,onDelete,updateUser,isLoading}:TableProbs){
 
     const [isAdmin,setIsAdmin] = useState(false)
     const search = useSelector((store:RootState)=>store.search)
@@ -79,12 +88,26 @@ export default function Table({getDatas,datas,totalCount,onDelete,updateUser}:Ta
       
       
     useEffect(()=>{
-      console.log(search)
       if(page>datas.length){
         getDatas(page,LIMIT_PAGE,search)
         }
     },[page,search,isUserId])
 
+    if(isLoading){
+      return(
+       <div className="w-full flex justify-center">
+         <Triangle
+          visible={true}
+          height="80"
+          width="80"
+          color="#4fa94d"
+          ariaLabel="triangle-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          />
+       </div>
+      )
+    }
       
     return(
         <>
