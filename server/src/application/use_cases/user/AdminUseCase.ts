@@ -6,7 +6,7 @@ import { IUserRepository } from "@/domain/interface/repositories/IUserRepository
 
 export default class AdminsUsecase{
     constructor(private userRepository:IUserRepository){}
-    async fetchUser(data:{page:number,search:string,limit:number}){
+    async fetchUser(data:{page:number,search:string,limit:number,delay:number}){
         console.log('data search')
         console.log(data)
         const query = data.search?.trim()
@@ -18,7 +18,7 @@ export default class AdminsUsecase{
       
         const skip = (data.page-1)*data.limit
       
-        return await this.userRepository.find(query,skip,data.limit)
+        return await this.userRepository.find(query,skip,data.limit,data?.delay)
     }
     async deleteUser(_id:string){
         await this.userRepository.delete(_id)

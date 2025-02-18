@@ -30,17 +30,21 @@ export default class UserRepository implements IUserRepository{
     async findByEamil(emailID: string): Promise<IUser | undefined> {
         return (await this.UserModel.findOne({emailID}).lean())?.toObject()
     } 
-    async find(query:any,skip:number,limit:number) : Promise<IUser[]>{
+    async find(query: any, skip: number, limit: number, delay: number): Promise<IUser[]> {
+      
+        await new Promise(resolve => setTimeout(resolve, delay));
+        
         return await this.UserModel.aggregate([
-            { $match: query }, 
+            { $match: query },
             {
-              $facet: {
-                totalCount: [{ $count: "count" }],
-                users: [{ $skip: skip }, { $limit: limit }],
-              },
+                $facet: {
+                    totalCount: [{ $count: "count" }],
+                    users: [{ $skip: skip }, { $limit: limit }],
+                },
             },
-          ]);
+        ]);
     }
+    
     async delete(_id: string): Promise<void> {
         await this.UserModel.deleteOne({_id})
     }

@@ -17,8 +17,9 @@ export default class AdminController{
             const page = Number(req.query.page) || 1;  
             const limit = Number(req.query.limit) || 10;  
             const search = req.query.search ? String(req.query.search).trim() : ""; 
+            const delay = Number(req.query?.delay) || 3000
 
-            const result = await this.adminUsecase.fetchUser({page,search,limit})
+            const result = await this.adminUsecase.fetchUser({page,search,limit,delay})
             res.status(HttpStatus.Created).json({success:true,message:'successfully fetch the data',result})
         } catch (error) {
             next(error)
