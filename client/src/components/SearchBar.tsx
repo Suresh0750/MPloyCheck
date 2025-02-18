@@ -1,13 +1,27 @@
 
 import { useDispatch } from "react-redux"
 import { setSearch } from "@/redux/slices/serachSlice"
+import debounce from "lodash/debounce";
+import { useCallback } from "react";
+import { resetRecords } from "@/redux/slices/recordSlice";
+import { resetUsers } from "@/redux/slices/useSlice";
 
 export default function SearchBar(){
     const dispatch = useDispatch()
 
-    const handleSearch = (e:React.ChangeEvent<HTMLInputElement>)=>{
-        dispatch(setSearch(e.target.value))
-    }
+    // * debouncing used for delay search function
+
+    const debouncedSearch = useCallback(
+        debounce((query) => {
+        dispatch(resetRecords())  // * update empth while search the slice
+        dispatch(resetUsers()) 
+        dispatch(setSearch(query));
+        }, 300), 
+        []
+      );
+      const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        debouncedSearch(e.target.value);
+      };
     return(
         <>
         <input

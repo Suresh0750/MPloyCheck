@@ -17,6 +17,9 @@ export const useSignup = ()=>{
             const result = await signUpUser(data)
             
             showUserIdToast(result.userId)
+            setTimeout(()=>{
+                Router.replace('/auth/login')
+            },500)
 
         }catch(error: unknown){
             if(error instanceof Error){

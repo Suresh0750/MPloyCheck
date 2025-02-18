@@ -79,12 +79,18 @@ export default function Table({getDatas,datas,totalCount,onDelete,updateUser}:Ta
       
       
     useEffect(()=>{
-      console.log(search)
+        alert(page)
+        alert(datas?.length)
       if(page>datas.length){
         getDatas(page,LIMIT_PAGE,search)
         }
     },[page,search,isUserId])
 
+    useEffect(()=>{
+      if(role!=='user'&&isUserId){
+        getDatas(page,LIMIT_PAGE,search)
+      }
+    },[isUserId])
       
     return(
         <>

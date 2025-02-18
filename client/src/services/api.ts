@@ -2,6 +2,7 @@ import axios from "axios";
 import { SERVER_URL } from "@/config/constants";
 import { LoginSchemaType, SignupSchemaType } from "@/lib/validators/authSchema";
 import { IUser } from "@/types/user";
+import { RecordSchemaType } from "@/lib/validators/recordSchema";
 
 export const axiosInstance = axios.create({
     baseURL :SERVER_URL,
@@ -74,7 +75,20 @@ export const fetchUsers = async (page: number, limit: number, search?: string) =
         throw handleAxiosError(error);
     }
   }
+  
+  export const logoutUser = async()=>{
+    try {
+        const response = await axiosInstance.post(`/api/user/logout`)
+        return response.data
+    } catch (error) {
+        throw handleAxiosError(error);
+    }
+  }
 
+
+/*
+    Record API functions
+*/
 
 export const fetchRecord = async(page:number,limit:number,search:string,userId:string)=>{
     try{
@@ -87,6 +101,15 @@ export const fetchRecord = async(page:number,limit:number,search:string,userId:s
         })
         return response.data
     }catch(error:unknown){
+        throw handleAxiosError(error);
+    }
+}
+
+export const createRecord = async(data:RecordSchemaType)=>{
+    try {
+        const response = await axiosInstance.post(`/api/record/create`,data)
+        return response.data 
+    } catch (error:unknown) {
         throw handleAxiosError(error);
     }
 }

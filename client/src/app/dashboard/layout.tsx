@@ -7,7 +7,9 @@ import { useUser } from "@/hooks/useUser";
 import { FaBackward } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { currentRecordUserId } from "@/redux/slices/recordSlice";
+import { currentRecordUserId, resetRecords } from "@/redux/slices/recordSlice";
+import AddRecord from "@/components/AddRecord";
+import '../globals.css'
 
 export default function Layout({
   children,
@@ -57,7 +59,10 @@ export default function Layout({
                     role=='admin'&&isUserId && (
                       <button 
                         className="flex items-center gap-2 border ml-2 border-gray-300 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700 hover:shadow-lg transition-all duration-300"
-                        onClick={()=>dispatch(currentRecordUserId(null))} // * admin back to the user after see the user record
+                        onClick={()=>{
+                          dispatch(currentRecordUserId(null))
+                          dispatch(resetRecords())
+                        }} // * admin back to the user after see the user record
                         >
                         <FaBackward className="text-xl" />
                         Back
@@ -79,7 +84,7 @@ export default function Layout({
         <div className="mt-4">{role=='admin'&&!isUserId ? user : record}</div>
       </div>
       {
-        addData && <AddUser onClose={()=>setAddData(false)}  getUser={getUser}/>
+        addData&&isUserId ? <AddRecord onClose={()=>setAddData(false)} userId={isUserId}/> : (addData && <AddUser onClose={()=>setAddData(false)}  getUser={getUser}/>)
       }
     </>
   );

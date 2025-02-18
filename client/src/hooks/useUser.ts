@@ -1,16 +1,22 @@
 
 import { useDispatch } from "react-redux";
-import { deleteUser, fetchUsers, updateUser } from "@/services/api";
-import { addUser , addCount} from "@/redux/slices/useSlice";
+import { deleteUser, fetchUsers, logoutUser, updateUser } from "@/services/api";
+import { addUser , addCount, currentUser, resetUsers} from "@/redux/slices/useSlice";
 import { IUser } from "@/types/user";
-import toast from "react-hot-toast";
+import {toast,Toaster} from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { resetRecords } from "@/redux/slices/recordSlice";
+import { resetSearch } from "@/redux/slices/serachSlice";
 
 export const useUser = ()=>{
    const dispatch = useDispatch()
+   const Router = useRouter()
 
          async function getUser(page:number=1,limit:number=10,search:string=''){
             try {
                 const result = await fetchUsers(page, limit, search)
+                console.log('total users')
+                console.log(result?.[0]?.users)
                 dispatch(addUser(result?.[0]?.users))
                 dispatch(addCount(result?.[0]?.totalCount[0]?.count || 0))
             } catch (error) {
@@ -26,16 +32,16 @@ export const useUser = ()=>{
                 return result.message
             } catch (error: unknown) {
                 if (error instanceof Error) {
-                    toast.error(error.message,{
+                return    toast.error(error.message,{
                         duration : 1000
                     });
                 } else {
-                    toast.error("Failed to delete user!",{
+                return    toast.error("Failed to delete user!",{
                         duration : 1000
                     });
                 }
                 
-                throw error; 
+                
             }
          }
 
@@ -48,20 +54,50 @@ export const useUser = ()=>{
                 return result;
             } catch (error: unknown) {
                 if (error instanceof Error) {
+                return    toast.error(error.message,{
+                        duration:1000
+                    });
+                } else {
+                return toast.error("Failed to update user!",{
+                        duration:1000
+                    });
+                }
+
+            }
+        }
+
+         const logout = async()=>{
+            try {
+                
+                const result = await logoutUser();
+               
+                    toast.success(result?.message,{
+                        duration:500
+                    });
+                    dispatch(currentUser({}))
+                    dispatch(resetRecords())
+                    dispatch(resetUsers())
+                    dispatch(resetSearch(''))
+                    localStorage.setItem('user','')
+                    setTimeout(()=>{
+                        Router.refresh()
+                    },600)
+
+            } catch (error: unknown) {
+                if (error instanceof Error) {
                     toast.error(error.message,{
                         duration:1000
                     });
                 } else {
-                    toast.error("Failed to update user!",{
+                    toast.error("Failed to logout user!",{
                         duration:1000
                     });
                 }
                 
-                throw error; 
             }
-        }
+         }
    
-    return {getUser,onDelete,onUpdate}
+    return {getUser,onDelete,onUpdate,logout,Toaster}
 }   
 
 

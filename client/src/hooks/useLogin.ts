@@ -31,7 +31,7 @@ export const useLogin = ()=>{
             }
             toast.success(result?.message)
             setTimeout(()=>{
-                Router.push('/dashboard')
+                Router.replace('/dashboard')
             },1000)
         }catch(error:unknown){
             if(error instanceof Error){
